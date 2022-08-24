@@ -35,6 +35,7 @@ describe('Core Tests', () => {
         let search = node(decoded, "attributes.id", "search");
         let click = clicks(decoded)[0];
         let input = inputs(decoded)[0];
+        let masked = text(decoded, "maskedMultipleBytesString");
         
         // Non-sensitive fields continue to pass through with sensitive bits masked off
         assert.equal(heading, "Thanks for your order #••••••••");
@@ -44,6 +45,7 @@ describe('Core Tests', () => {
         assert.equal(email.attributes.value, "••••• •••• •••• ••••");
         assert.equal(password.attributes.value, "••••• ••••");
         assert.equal(search.attributes.value, "hello •••••");
+        assert.equal(masked, "••••• •••••");
 
         // Clicked text and input value should be consistent with uber masking configuration
         assert.equal(click.data.text, "Hello •••••");
@@ -60,6 +62,7 @@ describe('Core Tests', () => {
         let search = node(decoded, "attributes.id", "search");
         let click = clicks(decoded)[0];
         let input = inputs(decoded)[0];
+        let masked = text(decoded, "maskedMultipleBytesString");
 
         // All fields are randomized and masked
         assert.equal(heading, "• ••••• ••••• ••••• ••••• •••••");
@@ -67,6 +70,7 @@ describe('Core Tests', () => {
         assert.equal(email.attributes.value, "••••• •••• •••• ••••");
         assert.equal(password.attributes.value, "••••• ••••");
         assert.equal(search.attributes.value, "••••• •••• ••••");
+        assert.equal(masked, "••••• •••••");
 
         // Clicked text and input value should also be masked in strict mode
         assert.equal(click.data.text, "••••• •••• ••••");
@@ -83,11 +87,13 @@ describe('Core Tests', () => {
         let search = node(decoded, "attributes.id", "search");
         let click = clicks(decoded)[0];
         let input = inputs(decoded)[0];
+        let masked = text(decoded, "maskedMultipleBytesString");
 
         // Text flows through unmasked for non-sensitive fields, including input fields
         assert.equal(heading, "Thanks for your order #2AB700GH");
         assert.equal(address, "1 Microsoft Way, Redmond, WA - 98052");
         assert.equal(search.attributes.value, "hello w0rld");
+        assert.equal(masked, "••••• •••••");
 
         // Sensitive fields are still masked
         assert.equal(email.attributes.value, "••••• •••• •••• ••••");
